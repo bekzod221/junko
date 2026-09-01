@@ -1,0 +1,29 @@
+[
+  {
+    "id": "1786664469568_vu30qr23j",
+    "key": "CODM23",
+    "hwid": "1DF938A5-1A0C-4A04-AA15-A5DE40C114D8",
+    "version": "1.0",
+    "duration": "7d",
+    "expiresAt": "20.08.2026 23:45:51",
+    "product": "PUBG"
+  },
+  {
+    "id": "demo_pubg_open",
+    "key": "PUBGDEMO",
+    "hwid": "",
+    "version": "1.0",
+    "duration": "30d",
+    "expiresAt": null,
+    "product": "PUBG"
+  },
+  {
+    "id": "demo_ff_open",
+    "key": "FFDEMO",
+    "hwid": "",
+    "version": "1.0",
+    "duration": "30d",
+    "expiresAt": null,
+    "product": "Free Fire"
+  }
+]

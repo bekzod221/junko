@@ -1,0 +1,26 @@
+[
+  {
+    "name": "PUBG",
+    "icon": "https://github.com/an1ksyy/faq/blob/main/pubg.webp?raw=true",
+    "file": "https://github.com/an1ksyy/faq/raw/refs/heads/main/pubg.3105",
+    "pass": "edgy",
+    "features": "Graphic Improvements, Game sense",
+    "isActive": true
+  },
+  {
+    "name": "MLBB (Melonity)",
+    "icon": "https://github.com/an1ksyy/faq/blob/main/melonity.png?raw=true",
+    "file": "https://github.com/an1ksyy/faq/releases/download/mel/Melonity.3105",
+    "pass": "null",
+    "features": "Drone, Cool",
+    "isActive": false
+  },
+  {
+    "name": "Free Fire",
+    "icon": "https://github.com/an1ksyy/faq/blob/main/melonity.png?raw=true",
+    "file": "https://github.com/an1ksyy/faq/releases/download/mel/Melonity.3105",
+    "pass": "null",
+    "features": "Understanding, Coolness",
+    "isActive": true
+  }
+]
