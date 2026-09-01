@@ -10,7 +10,10 @@ app.use(express.urlencoded({ extended: true }));
 
 const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, "db");
 const KEYS_FILE = path.join(DATA_DIR, "keys.json");
-const PRODUCTS_FILE = path.join(__dirname, "db", "products.json");
+// Products live in DATA_DIR alongside the keys so they survive a redeploy when a
+// disk is mounted. The copy shipped in the repo is only a seed for first boot.
+const PRODUCTS_FILE = path.join(DATA_DIR, "products.json");
+const PRODUCTS_SEED = path.join(__dirname, "db", "products.json");
 
 const ADMIN_API_SECRET = process.env.ADMIN_API_SECRET || "";
 
@@ -58,9 +61,23 @@ async function readJSON(file, fallback) {
   }
 }
 
-async function writeKeys(db) {
-  await fs.mkdir(path.dirname(KEYS_FILE), { recursive: true });
-  await fs.writeFile(KEYS_FILE, JSON.stringify(db, null, 2), "utf-8");
+async function writeJSON(file, data) {
+  await fs.mkdir(path.dirname(file), { recursive: true });
+  await fs.writeFile(file, JSON.stringify(data, null, 2), "utf-8");
+}
+
+const writeKeys = (db) => writeJSON(KEYS_FILE, db);
+const writeProducts = (list) => writeJSON(PRODUCTS_FILE, list);
+
+async function readProducts() {
+  try {
+    return JSON.parse(await fs.readFile(PRODUCTS_FILE, "utf-8"));
+  } catch {
+    // Nothing in DATA_DIR yet — seed it from the catalog bundled with the repo.
+    const seed = await readJSON(PRODUCTS_SEED, []);
+    if (PRODUCTS_FILE !== PRODUCTS_SEED) await writeProducts(seed).catch(() => {});
+    return seed;
+  }
 }
 
 async function notify(text) {
@@ -91,8 +108,7 @@ app.get("/ping", (_req, res) => res.send("OK"));
 
 app.get("/products", async (_req, res) => {
   try {
-    const products = await readJSON(PRODUCTS_FILE, []);
-    res.json(products);
+    res.json(await readProducts());
   } catch (err) {
     console.error(err);
     error(res, 500, "server", "Failed to load products");
@@ -149,6 +165,91 @@ app.post("/verify", async (req, res) => {
     console.error(err);
     return error(res, 500, "server", "Invalid key");
   }
+});
+
+// ── Products ──────────────────────────────────────────────
+// `name` is the identity: keys store a product name, not an id, so it is fixed
+// once created. Everything else is editable.
+
+function cleanProduct(body, base = {}) {
+  const pick = (field, fallback) =>
+    body[field] === undefined ? fallback : String(body[field] ?? "").trim();
+
+  return {
+    name: base.name ?? String(body.name ?? "").trim(),
+    icon: pick("icon", base.icon ?? ""),
+    file: pick("file", base.file ?? ""),
+    pass: pick("pass", base.pass ?? "null"),
+    features: pick("features", base.features ?? ""),
+    isActive: body.isActive === undefined ? (base.isActive ?? true) : Boolean(body.isActive),
+  };
+}
+
+function badUrl(value) {
+  if (!value) return false;
+  return !/^https?:\/\//i.test(value);
+}
+
+app.post("/product-create", requireAdmin, async (req, res) => {
+  const name = String(req.body?.name || "").trim();
+  if (!name) return error(res, 400, "missing", "name is required");
+  if (name.length > 64) return error(res, 400, "invalid", "name must be 64 characters or fewer");
+
+  const products = await readProducts();
+  if (products.some((p) => p.name.toLowerCase() === name.toLowerCase())) {
+    return error(res, 400, "exists", "A product with that name already exists");
+  }
+
+  const item = cleanProduct(req.body, { name });
+  if (badUrl(item.icon)) return error(res, 400, "invalid", "icon must be an http(s) URL");
+  if (badUrl(item.file)) return error(res, 400, "invalid", "file must be an http(s) URL");
+
+  products.push(item);
+  await writeProducts(products);
+  return res.status(201).json({ status: "success", product: item });
+});
+
+app.post("/product-update", requireAdmin, async (req, res) => {
+  const name = String(req.body?.name || "").trim();
+  if (!name) return error(res, 400, "missing", "name is required");
+
+  const products = await readProducts();
+  const index = products.findIndex((p) => p.name === name);
+  if (index === -1) return error(res, 404, "invalid", "Product not found");
+
+  const item = cleanProduct(req.body, products[index]);
+  if (badUrl(item.icon)) return error(res, 400, "invalid", "icon must be an http(s) URL");
+  if (badUrl(item.file)) return error(res, 400, "invalid", "file must be an http(s) URL");
+
+  products[index] = item;
+  await writeProducts(products);
+  return res.json({ status: "success", product: item });
+});
+
+app.post("/product-delete", requireAdmin, async (req, res) => {
+  const name = String(req.body?.name || "").trim();
+  if (!name) return error(res, 400, "missing", "name is required");
+
+  const products = await readProducts();
+  const index = products.findIndex((p) => p.name === name);
+  if (index === -1) return error(res, 404, "invalid", "Product not found");
+
+  // Keys reference a product by name; orphaning them would make /verify reject
+  // with "not assigned to a product". Refuse unless the caller insists.
+  const keys = await readJSON(KEYS_FILE, []);
+  const attached = keys.filter((row) => row.product === name);
+  if (attached.length && !req.body?.force) {
+    return res.status(409).json({
+      status: "error",
+      code: "in_use",
+      message: `${attached.length} key${attached.length === 1 ? "" : "s"} still use this product`,
+      keys: attached.length,
+    });
+  }
+
+  products.splice(index, 1);
+  await writeProducts(products);
+  return res.json({ status: "success", orphanedKeys: attached.length });
 });
 
 app.get("/showall", requireAdmin, async (_req, res) => {
