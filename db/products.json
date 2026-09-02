@@ -4,23 +4,109 @@
     "icon": "https://github.com/an1ksyy/faq/blob/main/pubg.webp?raw=true",
     "file": "https://github.com/an1ksyy/faq/raw/refs/heads/main/pubg.3105",
     "pass": "edgy",
-    "features": "Graphic Improvements, Game sense",
+    "features": [
+      "Graphic Improvements",
+      "Game sense"
+    ],
     "isActive": true
-  },
-  {
-    "name": "MLBB (Melonity)",
-    "icon": "https://github.com/an1ksyy/faq/blob/main/melonity.png?raw=true",
-    "file": "https://github.com/an1ksyy/faq/releases/download/mel/Melonity.3105",
-    "pass": "null",
-    "features": "Drone, Cool",
-    "isActive": false
   },
   {
     "name": "Free Fire",
-    "icon": "https://github.com/an1ksyy/faq/blob/main/melonity.png?raw=true",
-    "file": "https://github.com/an1ksyy/faq/releases/download/mel/Melonity.3105",
-    "pass": "null",
-    "features": "Understanding, Coolness",
+    "icon": "https://github.com/an1ksyy/faq/blob/main/freefire.png?raw=true",
+    "file": "https://github.com/an1ksyy/faq/releases/download/freefire/FreeFire.3105",
+    "pass": null,
+    "features": [
+      "Understanding",
+      "Coolness"
+    ],
     "isActive": true
+  },
+  {
+    "name": "MLBB SKINS",
+    "icon": "https://github.com/an1ksyy/faq/blob/main/melonity.png?raw=true",
+    "file": null,
+    "pass": null,
+    "features": [
+      "Hero Skins",
+      "Skin Collection"
+    ],
+    "isActive": true,
+    "details": {
+      "description": "Mobile Legends collaboration and anime skins.",
+      "heroes": [
+        {
+          "name": "Xavier",
+          "icon": "https://i.pinimg.com/1200x/d6/98/a7/d698a7100b07eb7fd3891bf0e89ee9c8.jpg",
+          "skins": [
+            {
+              "name": "Gojo",
+              "icon": "https://i.pinimg.com/1200x/97/02/27/9702272e83d3b67c52d3aa8c77ac8fb4.jpg",
+              "file": "https://github.com/an1ksyy/faq/releases/download/jul/gojo.3105",
+              "pass": "edgy"
+            }
+          ]
+        },
+        {
+          "name": "Julian",
+          "icon": "https://i.pinimg.com/1200x/96/31/97/96319790b11cbdf16311307cbbf2407d.jpg",
+          "skins": [
+            {
+              "name": "Itachi",
+              "icon": "https://i.pinimg.com/736x/aa/b9/e9/aab9e90acaff23555b726c2ec4716f7c.jpg",
+              "file": "https://github.com/an1ksyy/faq/releases/download/jul/itachi.3105",
+              "pass": "edgy"
+            },
+            {
+              "name": "Kurapika",
+              "icon": "https://i.pinimg.com/1200x/79/87/0c/79870cca6d12ea22b0c036de73770a03.jpg",
+              "file": "https://github.com/an1ksyy/faq/releases/download/jul/kurapike.3105",
+              "pass": "edgy"
+            },
+            {
+              "name": "Megumi",
+              "icon": "https://i.pinimg.com/736x/b6/90/e8/b690e8aad53b31422cd18a555fdefa63.jpg",
+              "file": "https://github.com/an1ksyy/faq/releases/download/jul/megumi.3105",
+              "pass": "edgy"
+            }
+          ]
+        },
+        {
+          "name": "Gusion",
+          "icon": "https://i.pinimg.com/1200x/3c/f6/09/3cf60954f272718d2ee23e000d487109.jpg",
+          "skins": [
+            {
+              "name": "Minato",
+              "icon": "https://i.pinimg.com/736x/ca/a7/bf/caa7bf99d1da58f2c895129cceff4980.jpg",
+              "file": "https://github.com/an1ksyy/faq/releases/download/jul/minato.3105",
+              "pass": "edgy"
+            }
+          ]
+        },
+        {
+          "name": "Melissa",
+          "icon": "https://i.pinimg.com/736x/68/e3/51/68e35189a2cae2690b689aca70fd682e.jpg",
+          "skins": [
+            {
+              "name": "Nobara",
+              "icon": "https://i.pinimg.com/736x/e5/c1/0e/e5c10e33dbaee467f6cc299bb039f717.jpg",
+              "file": "https://github.com/an1ksyy/faq/releases/download/jul/nobara.3105",
+              "pass": "edgy"
+            }
+          ]
+        },
+        {
+          "name": "Suyou",
+          "icon": "https://i.pinimg.com/1200x/16/c9/78/16c9784b9c5109e3a0cdbb749bd2a6b7.jpg",
+          "skins": [
+            {
+              "name": "Sasuke",
+              "icon": "https://i.pinimg.com/736x/99/c4/7c/99c47c8cfef12b5de4af0a82d5ca67ef.jpg",
+              "file": "https://github.com/an1ksyy/faq/releases/download/jul/sasuke.3105",
+              "pass": "edgy"
+            }
+          ]
+        }
+      ]
+    }
   }
 ]

@@ -171,23 +171,102 @@ app.post("/verify", async (req, res) => {
 // `name` is the identity: keys store a product name, not an id, so it is fixed
 // once created. Everything else is editable.
 
-function cleanProduct(body, base = {}) {
-  const pick = (field, fallback) =>
-    body[field] === undefined ? fallback : String(body[field] ?? "").trim();
+function splitFeatures(value) {
+  return String(value || "")
+    .split(/[,;\n]+/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
 
+function cleanFeatures(value, fallback) {
+  if (value === undefined) {
+    if (Array.isArray(fallback)) return fallback;
+    if (typeof fallback === "string") return splitFeatures(fallback);
+    return [];
+  }
+  if (Array.isArray(value)) return value.map((x) => String(x).trim()).filter(Boolean);
+  return splitFeatures(value);
+}
+
+function cleanPass(value, fallback) {
+  if (value === undefined) return fallback === undefined ? null : fallback;
+  if (value === null) return null;
+  const s = String(value).trim();
+  if (!s || s.toLowerCase() === "null") return null;
+  return s;
+}
+
+function cleanUrl(value, fallback) {
+  if (value === undefined) return fallback === undefined ? null : fallback;
+  if (value === null) return null;
+  const s = String(value).trim();
+  return s || null;
+}
+
+function cleanSkin(body = {}) {
   return {
+    name: String(body.name ?? "").trim(),
+    icon: cleanUrl(body.icon, "") || "",
+    file: cleanUrl(body.file, null),
+    pass: cleanPass(body.pass, null),
+  };
+}
+
+function cleanHero(body = {}) {
+  const skins = Array.isArray(body.skins) ? body.skins.map(cleanSkin).filter((s) => s.name) : [];
+  return {
+    name: String(body.name ?? "").trim(),
+    icon: cleanUrl(body.icon, "") || "",
+    skins,
+  };
+}
+
+function cleanDetails(details) {
+  if (details === null) return undefined;
+  if (!details || typeof details !== "object") return undefined;
+  const heroes = Array.isArray(details.heroes)
+    ? details.heroes.map(cleanHero).filter((h) => h.name)
+    : [];
+  const description = String(details.description ?? "").trim();
+  if (!heroes.length && !description) return undefined;
+  return { description, heroes };
+}
+
+function cleanProduct(body, base = {}) {
+  const item = {
     name: base.name ?? String(body.name ?? "").trim(),
-    icon: pick("icon", base.icon ?? ""),
-    file: pick("file", base.file ?? ""),
-    pass: pick("pass", base.pass ?? "null"),
-    features: pick("features", base.features ?? ""),
+    icon: cleanUrl(body.icon, base.icon) || "",
+    file: cleanUrl(body.file, base.file),
+    pass: cleanPass(body.pass, base.pass),
+    features: cleanFeatures(body.features, base.features),
     isActive: body.isActive === undefined ? (base.isActive ?? true) : Boolean(body.isActive),
   };
+  const details = body.details === undefined ? base.details : cleanDetails(body.details);
+  if (details) item.details = details;
+  return item;
 }
 
 function badUrl(value) {
   if (!value) return false;
   return !/^https?:\/\//i.test(value);
+}
+
+function collectUrls(item) {
+  const urls = [item.icon, item.file];
+  for (const hero of item.details?.heroes || []) {
+    urls.push(hero.icon);
+    for (const skin of hero.skins || []) {
+      urls.push(skin.icon, skin.file);
+    }
+  }
+  return urls;
+}
+
+function productHasPayload(item) {
+  if (item.file) return true;
+  return (item.details?.heroes || []).some((hero) =>
+    (hero.skins || []).some((skin) => skin.file)
+  );
 }
 
 app.post("/product-create", requireAdmin, async (req, res) => {
@@ -201,8 +280,12 @@ app.post("/product-create", requireAdmin, async (req, res) => {
   }
 
   const item = cleanProduct(req.body, { name });
-  if (badUrl(item.icon)) return error(res, 400, "invalid", "icon must be an http(s) URL");
-  if (badUrl(item.file)) return error(res, 400, "invalid", "file must be an http(s) URL");
+  if (collectUrls(item).some(badUrl)) {
+    return error(res, 400, "invalid", "icon and file URLs must be http(s)");
+  }
+  if (!productHasPayload(item)) {
+    return error(res, 400, "invalid", "Add a payload URL or at least one skin file");
+  }
 
   products.push(item);
   await writeProducts(products);
@@ -218,8 +301,12 @@ app.post("/product-update", requireAdmin, async (req, res) => {
   if (index === -1) return error(res, 404, "invalid", "Product not found");
 
   const item = cleanProduct(req.body, products[index]);
-  if (badUrl(item.icon)) return error(res, 400, "invalid", "icon must be an http(s) URL");
-  if (badUrl(item.file)) return error(res, 400, "invalid", "file must be an http(s) URL");
+  if (collectUrls(item).some(badUrl)) {
+    return error(res, 400, "invalid", "icon and file URLs must be http(s)");
+  }
+  if (!productHasPayload(item)) {
+    return error(res, 400, "invalid", "Add a payload URL or at least one skin file");
+  }
 
   products[index] = item;
   await writeProducts(products);
