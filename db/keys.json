@@ -29,10 +29,10 @@
     {
         "id": "1788503707856_ghvyg6gb6",
         "key": "Edgy-24534",
-        "hwid": "",
+        "hwid": "4FCA03FC-B7FA-4348-B89E-157816C4CC8A",
         "version": "1.0",
         "duration": "90d",
-        "expiresAt": null,
+        "expiresAt": "03.12.2026 18:14:10",
         "product": "PUBG"
     },
     {
@@ -43,5 +43,59 @@
         "duration": "90d",
         "expiresAt": null,
         "product": "CAPCUT PRO"
+    },
+    {
+        "id": "1788550697497_4711kdr9e",
+        "key": "Edgy-23123",
+        "hwid": "5C201EAB-2507-49A9-B5C8-4EC2FC236B84",
+        "version": "1.0",
+        "duration": "7d",
+        "expiresAt": "11.09.2026 19:39:05",
+        "product": "PUBG"
+    },
+    {
+        "id": "1788551344516_e1zhl2zkd",
+        "key": "Ceo",
+        "hwid": "994CBB07-9E74-4ABA-A001-9361BBFE3F10",
+        "version": "1.0",
+        "duration": "365d",
+        "expiresAt": "04.09.2027 19:49:14",
+        "product": "PUBG"
+    },
+    {
+        "id": "1788558048214_4i28o55gi",
+        "key": "85B9-ZK7U-57Q5",
+        "hwid": "0E4ACDA2-6690-4DE9-A6AD-AD86D5293597",
+        "version": "1.0",
+        "duration": "5d",
+        "expiresAt": "09.09.2026 21:49:30",
+        "product": "PUBG"
+    },
+    {
+        "id": "1788580799021_cj7l9wjyt",
+        "key": "EDGYPUBG",
+        "hwid": "C27E4A09-5926-4C6D-AF98-D6A5F01D1F7D",
+        "version": "1.0",
+        "duration": "1d",
+        "expiresAt": "06.09.2026 04:22:25",
+        "product": "PUBG"
+    },
+    {
+        "id": "1788954901163_2del08urr",
+        "key": "PGKEY20",
+        "hwid": "C27E4A09-5926-4C6D-AF98-D6A5F01D1F7D",
+        "version": "1.0",
+        "duration": "7d",
+        "expiresAt": "17.09.2026 03:33:00",
+        "product": "PUBG"
+    },
+    {
+        "id": "1789068889770_9b6i9c0bs",
+        "key": "nigga",
+        "hwid": "3CCF71E2-236B-454E-A76E-612BC052C970",
+        "version": "1.0",
+        "duration": "7d",
+        "expiresAt": "17.09.2026 19:34:53",
+        "product": "PUBG"
     }
 ]

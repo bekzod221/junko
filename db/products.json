@@ -2,27 +2,15 @@
     {
         "name": "PUBG",
         "icon": "https://github.com/an1ksyy/faq/blob/main/pubg.webp?raw=true",
-        "file": "https://github.com/an1ksyy/faq/raw/refs/heads/main/pubg-edgy.3105",
+        "file": "https://github.com/an1ksyy/faq/raw/refs/heads/main/pgtempl4-6.3105",
         "pass": "edgy",
         "features": [
-            "SKINCHANGER",
             "AIMBOT",
             "ESP",
             "ANTIBAN",
             "165 FPS",
-            "MORE..."
-        ],
-        "isActive": true
-    },
-    {
-        "name": "Free Fire",
-        "icon": "https://github.com/an1ksyy/faq/blob/main/freefire.png?raw=true",
-        "file": "https://github.com/an1ksyy/faq/releases/download/freefire/FreeFire.3105",
-        "pass": null,
-        "features": [
-            "BODY HS",
-            "ANTIBAN",
-            "CHAMS"
+            "MAGIC",
+            "+5 MORE"
         ],
         "isActive": true
     },
